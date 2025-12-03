@@ -2,14 +2,14 @@
 const CACHE_NAME = 'shelfpass-cache-v1';
 
 const ASSETS = [
-  '/appteste/',
-  '/appteste/index.html',
-  '/appteste/home.html',
-  '/appteste/manifest.json',
-  '/appteste/logo-shelf-med.png',
-  '/appteste/logo-shelf-pass.png',
-  '/appteste/icon-192.png',
-  '/appteste/icon-512.png'
+  '/shelf-pass/',
+  '/shelf-pass/index.html',
+  '/shelf-pass/home.html',
+  '/shelf-pass/manifest.json',
+  '/shelf-pass/logo-shelf-med.png',
+  '/shelf-pass/logo-shelf-pass.png',
+  '/shelf-pass/icon-192.png',
+  '/shelf-pass/icon-512.png'
   // se criar arquivos .js ou .css separados, coloca aqui também
 ];
 
@@ -38,3 +38,4 @@ self.addEventListener('fetch', event => {
     })
   );
 });
+
