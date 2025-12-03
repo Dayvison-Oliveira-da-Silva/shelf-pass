@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <title>App - Shelf Pass</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #ffffff;
+      --card-soft: #f9fafb;
+      --text: #0f172a;
+      --text-soft: #6b7280;
+      --primary: #0f766e;
+      --primary-soft: #22c1b0;
+      --border: #d1d5db;
+      --accent: #f59e0b;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0b1f38 0, #020617 50%);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #e5e7eb;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
+    html,
+    body {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    header .logo-img {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: rgba(15, 118, 110, .12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    header .logo-img img {
+      width: 120%;
+      max-width: none;
+    }
+
+    header .logo-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    header .logo-text small {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: #9ca3af;
+    }
+
+    header .logo-text strong {
+      font-size: 1.05rem;
+    }
+
+    header button {
+      border-radius: 999px;
+      border: 1px solid rgba(156, 163, 175, .5);
+      background: transparent;
+      color: #e5e7eb;
+      padding: 6px 10px;
+      font-size: .75rem;
+      cursor: pointer;
+    }
+
+    .card-main {
+      background: linear-gradient(135deg, #0f766e, #22c1b0);
+      border-radius: 22px;
+      padding: 18px 16px 16px;
+      color: #ecfeff;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.6);
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-main::after {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 999px;
+      border: 1px solid rgba(236, 252, 203, 0.3);
+      top: -60px;
+      right: -60px;
+      opacity: .6;
+    }
+
+    .card-main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .badge-nivel {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.25);
+      font-size: .7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge-nivel span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #facc15;
+    }
+
+    .card-main h2 {
+      margin: 0 0 4px;
+      font-size: 1.2rem;
+    }
+
+    .card-main p {
+      margin: 0;
+      font-size: .82rem;
+      color: #d1fae5;
+    }
+
+    .card-main-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      font-size: .75rem;
+      color: #e0f2fe;
+    }
+
+    .card-main-footer .label {
+      opacity: .8;
+    }
+
+    .card-main-footer strong {
+      font-size: .95rem;
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .75rem;
+    }
+
+    .grid-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .action-card {
+      background: #020617;
+      border-radius: 18px;
+      padding: 12px;
+      border: 1px solid rgba(148, 163, 184, .45);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition: transform .1s ease, box-shadow .1s ease, border .15s ease;
+    }
+
+    .action-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.6);
+      border-color: rgba(56, 189, 248, .6);
+    }
+
+    .action-title {
+      font-size: .9rem;
+    }
+
+    .action-sub {
+      font-size: .75rem;
+      color: #9ca3af;
+    }
+
+    .section-title {
+      font-size: .9rem;
+      color: #9ca3af;
+      margin: 12px 2px 6px;
+    }
+
+    .list-item {
+      background: rgba(15, 23, 42, 0.75);
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: .8rem;
+    }
+
+    .list-item strong {
+      font-size: .83rem;
+    }
+
+    .chip {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, .15);
+      font-size: .7rem;
+      color: #bfdbfe;
+    }
+
+    .helper-bottom {
+      margin-top: 10px;
+      font-size: .72rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    /* Modal carteirinha */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 360px;
+      background: #020617;
+      border-radius: 22px;
+      padding: 18px 16px 16px;
+      border: 1px solid rgba(148, 163, 184, .6);
+      color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .modal-card::after {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 999px;
+      border: 1px dashed rgba(55, 65, 81, .5);
+      right: -60px;
+      bottom: -60px;
+      opacity: .7;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .modal-header-title small {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: #9ca3af;
+    }
+
+    .modal-header-title strong {
+      font-size: 1rem;
+    }
+
+    .modal-close {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 6px;
+      font-size: .78rem;
+      color: #9ca3af;
+    }
+
+    .qr-placeholder {
+      width: 96px;
+      height: 96px;
+      border-radius: 18px;
+      border: 1px dashed rgba(148, 163, 184, .7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      color: #9ca3af;
+    }
+
+    .card-footer-mini {
+      margin-top: 10px;
+      font-size: .7rem;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .highlight {
+      color: #fbbf24;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <header>
+      <div class="logo">
+        <div class="logo-img">
+          <img src="logo-shelf-med.png" alt="Shelf Dental Med">
+        </div>
+        <div class="logo-text">
+          <small>Shelf Pass</small>
+          <strong>Meu acesso</strong>
+        </div>
+      </div>
+
+      <button id="btnLogout">Sair</button>
+    </header>
+
+    <main>
+      <!-- Card principal / resumo -->
+      <section class="card-main">
+        <div class="card-main-header">
+          <div>
+            <div class="badge-nivel">
+              <span class="dot"></span>
+              <span id="nivelLabel">Nível Prata</span>
+            </div>
+            <h2 id="nomeUsuario">Carregando...</h2>
+            <p id="subtextUsuario">Assinante ativo Shelf Dental Med</p>
+          </div>
+          <div class="pill">
+            <span>Saldo de pontos</span>
+            <strong id="pontosUsuario">0</strong>
+          </div>
+        </div>
+
+        <div class="card-main-footer">
+          <div>
+            <div class="label">Status</div>
+            <strong id="statusUsuario">Ativo</strong>
+          </div>
+          <div>
+            <div class="label">Validade</div>
+            <strong id="validadeUsuario">--/--/----</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ações principais -->
+      <section class="grid-actions">
+        <div class="action-card" id="btnCarteirinha">
+          <span class="action-title">Carteirinha digital</span>
+          <span class="action-sub">Apresente na recepção dos eventos e treinamentos.</span>
+        </div>
+
+        <div class="action-card">
+          <span class="action-title">Benefícios e descontos</span>
+          <span class="action-sub">Veja as condições exclusivas para assinantes Shelf Pass.</span>
+        </div>
+
+        <div class="action-card">
+          <span class="action-title">Eventos & cursos</span>
+          <span class="action-sub">Confira a agenda do Shelf Academy e parceiros.</span>
+        </div>
+
+        <div class="action-card">
+          <span class="action-title">Atualizar cadastro</span>
+          <span class="action-sub">Mantenha seus dados sempre atualizados.</span>
+        </div>
+      </section>
+
+      <!-- Últimos destaques -->
+      <section>
+        <div class="section-title">Próximos destaques</div>
+
+        <div class="list-item">
+          <div>
+            <strong>Workshop Clínico Shelf Academy</strong>
+            <div>Manaus • Vagas limitadas</div>
+          </div>
+          <span class="chip">Em breve</span>
+        </div>
+
+        <div class="list-item">
+          <div>
+            <strong>Condição especial em materiais FGM</strong>
+            <div>Exclusivo para assinantes Shelf Pass</div>
+          </div>
+          <span class="chip">Descontos</span>
+        </div>
+      </section>
+
+      <p class="helper-bottom">
+        Dica: você pode adicionar o Shelf Pass na tela inicial do seu celular para abrir como um app.
+      </p>
+    </main>
+  </div>
+
+  <!-- Modal carteirinha -->
+  <div class="modal-backdrop" id="modalCarteirinha">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-header-title">
+          <small>Carteirinha</small>
+          <strong>Shelf Pass • <span id="cardNivel">Prata</span></strong>
+        </div>
+        <button class="modal-close" id="btnCloseModal">✕</button>
+      </div>
+
+      <div>
+        <div style="font-size:.8rem; margin-bottom:4px;">Nome do assinante</div>
+        <div style="font-size:.95rem; font-weight:600;" id="cardNome">Carregando...</div>
+        <div style="font-size:.75rem; color:#9ca3af;" id="cardDoc">CPF/CNPJ: ---</div>
+      </div>
+
+      <div class="card-row">
+        <div>
+          <div>Validade</div>
+          <div class="highlight" id="cardValidade">--/--/----</div>
+          <div style="margin-top:6px;">Status: <span id="cardStatus">Ativo</span></div>
+        </div>
+        <div class="qr-placeholder">
+          QR / Código<br>do assinante
+        </div>
+      </div>
+
+      <div class="card-footer-mini">
+        <span>ID interno: <span id="cardIdInterno">---</span></span>
+        <span>Grupo Shelf • Saúde & Educação</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase (modular) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6gAH1oFs_l8yhE8bEzzvn8LaMLjS0TyE",
+      authDomain: "shelf-dental-med.firebaseapp.com",
+      projectId: "shelf-dental-med",
+      storageBucket: "shelf-dental-med.firebasestorage.app",
+      messagingSenderId: "292067746340",
+      appId: "1:292067746340:web:fef769786ea46332646eb1",
+      measurementId: "G-PCQBRTRG1D"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // DOM refs
+    const nomeUsuario = document.getElementById('nomeUsuario');
+    const subtextUsuario = document.getElementById('subtextUsuario');
+    const pontosUsuario = document.getElementById('pontosUsuario');
+    const statusUsuario = document.getElementById('statusUsuario');
+    const validadeUsuario = document.getElementById('validadeUsuario');
+    const nivelLabel = document.getElementById('nivelLabel');
+
+    const modalCarteirinha = document.getElementById('modalCarteirinha');
+    const btnCarteirinha = document.getElementById('btnCarteirinha');
+    const btnCloseModal = document.getElementById('btnCloseModal');
+
+    const cardNome = document.getElementById('cardNome');
+    const cardDoc = document.getElementById('cardDoc');
+    const cardValidade = document.getElementById('cardValidade');
+    const cardStatus = document.getElementById('cardStatus');
+    const cardNivel = document.getElementById('cardNivel');
+    const cardIdInterno = document.getElementById('cardIdInterno');
+
+    const btnLogout = document.getElementById('btnLogout');
+
+    function formatDoc(docStr) {
+      if (!docStr) return '---';
+      const doc = (docStr + '').replace(/\D/g, '');
+      if (doc.length === 11) {
+        return doc.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+      }
+      if (doc.length === 14) {
+        return doc.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+      }
+      return docStr;
+    }
+
+    function defNivelLabel(nivel) {
+      if (!nivel) return 'Nível Prata';
+      const up = (nivel + '').toLowerCase();
+      if (up === 'black') return 'Nível Black';
+      if (up === 'gold' || up === 'ouro') return 'Nível Ouro';
+      return 'Nível ' + nivel.charAt(0).toUpperCase() + nivel.slice(1);
+    }
+
+    async function carregarDadosUsuario(user) {
+      try {
+        const email = user.email || '';
+        const docId = email.split('@')[0];         // 03686383241
+        if (!docId) {
+          await signOut(auth);
+          window.location.href = 'index.html';
+          return;
+        }
+
+        const ref = doc(db, 'users', docId);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+          // Não achou cadastro do usuário logado → volta pro login
+          await signOut(auth);
+          window.location.href = 'index.html';
+          return;
+        }
+
+        const data = snap.data() || {};
+        const nome = data.nome || 'Assinante Shelf Pass';
+        const pontos = data.pontos || 0;
+        const status = data.status || 'Ativo';
+        const validade = data.validade || '--/--/----';
+        const nivel = data.nivel || 'Prata';
+        const docStr = data.cpf_cnpj || docId;
+
+        // Card principal
+        nomeUsuario.textContent = nome;
+        subtextUsuario.textContent = 'Assinante ' + (nivel || 'Shelf Pass');
+        pontosUsuario.textContent = pontos;
+        statusUsuario.textContent = status;
+        validadeUsuario.textContent = validade;
+        nivelLabel.textContent = defNivelLabel(nivel);
+
+        // Carteirinha
+        cardNome.textContent = nome;
+        cardDoc.textContent = 'CPF/CNPJ: ' + formatDoc(docStr);
+        cardValidade.textContent = validade;
+        cardStatus.textContent = status;
+        cardNivel.textContent = defNivelLabel(nivel).replace('Nível ', '');
+        cardIdInterno.textContent = docId;
+      } catch (err) {
+        console.error('Erro ao carregar dados do usuário:', err);
+      }
+    }
+
+    // Controle de sessão
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Sem login → volta pro index
+        window.location.href = 'index.html';
+        return;
+      }
+      carregarDadosUsuario(user);
+    });
+
+    // Modal carteirinha
+    btnCarteirinha.addEventListener('click', () => {
+      modalCarteirinha.classList.add('show');
+    });
+
+    btnCloseModal.addEventListener('click', () => {
+      modalCarteirinha.classList.remove('show');
+    });
+
+    modalCarteirinha.addEventListener('click', (e) => {
+      if (e.target === modalCarteirinha) {
+        modalCarteirinha.classList.remove('show');
+      }
+    });
+
+    // Logout
+    btnLogout.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (err) {
+        console.error('Erro ao deslogar:', err);
+      }
+      window.location.href = 'index.html';
+    });
+
+    // Service Worker (PWA)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registrado (app):', reg.scope))
+          .catch(err => console.error('Erro SW (app):', err));
+      });
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW registrado:', reg.scope))
+          .catch(err => console.error('Erro ao registrar SW:', err));
+      });
+    }
+  </script>
+
+</body>
+
+</html>

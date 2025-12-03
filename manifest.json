@@ -1,0 +1,21 @@
+{
+  "name": "Shelf Pass",
+  "short_name": "Shelf Pass",
+  "start_url": "/appteste/index.html",
+  "scope": "/appteste/",
+  "display": "standalone",
+  "theme_color": "#0f766e",
+  "background_color": "#020617",
+  "icons": [
+    {
+      "src": "/appteste/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/appteste/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
